@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Personal Blog</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <!-- Navbar -->
+    <nav class="navbar">
+      <a href="{{ url_for('home') }}" class="logo-badge">
+        <span class="logo-dot"></span>
+        <span class="logo-text">DevBlog</span>
+      </a>
+      <div class="nav-actions">
+        {% if session.get('logged_in') %}
+          <a href="{{ url_for('create_post') }}" class="btn-create">+ Write Story</a>
+          <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="nav-link">Admin Login</a>
+        {% endif %}
+      </div>
+    </nav>
+
+    <!-- Hero Header -->
+    <header>
+      <span class="brand-badge">⚡ Digital Thoughts & Engineering</span>
+      <h1 class="blog-title">My Personal Blog</h1>
+      <p class="subtitle">Exploring software, creative thoughts, and ideas.</p>
+    </header>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-msg {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Posts Feed -->
+    <main>
+      <div class="section-header">
+        <h2 class="section-title">Latest Stories</h2>
+      </div>
+      
+      <div class="posts-grid">
+        {% if posts %}
+          {% for post in posts %}
+            <article class="post-card">
+              <div class="card-top">
+                <span class="post-date">{{ post['created_at'] }}</span>
+              </div>
+              <h3 class="post-title">
+                <a href="{{ url_for('post_detail', post_id=post['id']) }}">{{ post['title'] }}</a>
+              </h3>
+              <p class="post-excerpt">{{ post['content'] }}</p>
+              
+              <div class="card-footer">
+                <a href="{{ url_for('post_detail', post_id=post['id']) }}" class="read-more">Read full story &rarr;</a>
+                {% if session.get('logged_in') %}
+                  <div class="card-actions">
+                    <a href="{{ url_for('edit_post', post_id=post['id']) }}" class="btn-sm edit">Edit</a>
+                    <form action="{{ url_for('delete_post', post_id=post['id']) }}" method="POST" onsubmit="return confirm('Kya aap is story ko delete karna chahte hain?');" style="display:inline;">
+                      <button type="submit" class="btn-sm delete">Delete</button>
+                    </form>
+                  </div>
+                {% endif %}
+              </div>
+            </article>
+          {% endfor %}
+        {% else %}
+          <div class="post-card" style="text-align: center;">
+            <h3 class="post-title">No Stories Published Yet</h3>
+            <p class="post-excerpt">Sign in as admin to publish your first piece.</p>
+          </div>
+        {% endif %}
+      </div>
+    </main>
+  </div>
+</body>
+</html>
