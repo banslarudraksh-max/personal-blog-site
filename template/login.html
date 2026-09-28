@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login - Personal Blog</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <div class="top-nav">
+      <a href="{{ url_for('home') }}" class="back-link">&larr; Back to Home</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-msg {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="card-form login-card">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <span class="brand-badge">ADMIN ACCESS</span>
+        <h2 style="font-size: 1.8rem; margin-top: 0.6rem;">Welcome Back</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.2rem;">Sign in to create, edit or manage blog posts</p>
+      </div>
+
+      <form method="POST">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" class="form-control" placeholder="Enter username (admin)" required autofocus />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control" placeholder="Enter password (admin123)" required />
+        </div>
+
+        <button type="submit" class="btn-primary" style="margin-top: 0.5rem;">Sign In</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
